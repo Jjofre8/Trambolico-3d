@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import type { Product, ProductInput } from "@/types/product";
+
 import AdminLayout from "@/components/admin/AdminLayout";
 import ProductForm from "@/components/admin/ProductForm";
 import ProductTable from "@/components/admin/ProductTable";
+
 import {
   getAllProductsClient,
   createProduct,
@@ -21,6 +24,7 @@ export default function AdminPage() {
 
   const loadProducts = async () => {
     setLoading(true);
+
     try {
       const data = await getAllProductsClient();
       setProducts(data);
@@ -46,24 +50,38 @@ export default function AdminPage() {
   };
 
   const handleSubmit = async (input: ProductInput) => {
-    if (editingProduct) {
-      await updateProduct(editingProduct.id, input);
-    } else {
-      await createProduct(input);
+    try {
+      if (editingProduct) {
+        await updateProduct(editingProduct.id, input);
+      } else {
+        await createProduct(input);
+      }
+
+      setShowForm(false);
+      setEditingProduct(null);
+
+      await loadProducts();
+    } catch (err) {
+      console.error(err);
     }
-    setShowForm(false);
-    setEditingProduct(null);
-    await loadProducts();
   };
 
   const handleToggleActive = async (product: Product) => {
-    await toggleProductActive(product.id, !product.active);
-    await loadProducts();
+    try {
+      await toggleProductActive(product.id, !product.active);
+      await loadProducts();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleDelete = async (product: Product) => {
-    await deleteProduct(product.id);
-    await loadProducts();
+    try {
+      await deleteProduct(product.id);
+      await loadProducts();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -73,6 +91,7 @@ export default function AdminPage() {
           <h1 className="font-display text-2xl font-extrabold text-ink-900">
             Productos
           </h1>
+
           <p className="text-sm text-ink-700/70">
             Creá, editá, ocultá o eliminá productos del catálogo.
           </p>

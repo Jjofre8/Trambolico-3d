@@ -1,10 +1,13 @@
-import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
+
 import type { Product, ProductInput } from "@/types/product";
 
-/** Trae solo los productos activos, para el catálogo público (Server Component). */
+/**
+ * Trae los productos activos para el catálogo público.
+ */
 export async function getActiveProducts(): Promise<Product[]> {
-  const supabase = createServerClient();
+  const supabase = createBrowserClient();
+
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -19,20 +22,32 @@ export async function getActiveProducts(): Promise<Product[]> {
   return data ?? [];
 }
 
-/** Trae todos los productos (activos e inactivos) para el panel /admin. */
+/**
+ * Trae todos los productos para el panel de administración.
+ */
 export async function getAllProductsClient(): Promise<Product[]> {
   const supabase = createBrowserClient();
+
   const { data, error } = await supabase
     .from("products")
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
+
   return data ?? [];
 }
 
-export async function createProduct(input: ProductInput): Promise<Product> {
+/**
+ * Crea un producto.
+ */
+export async function createProduct(
+  input: ProductInput
+): Promise<Product> {
   const supabase = createBrowserClient();
+
   const { data, error } = await supabase
     .from("products")
     .insert({
@@ -50,41 +65,73 @@ export async function createProduct(input: ProductInput): Promise<Product> {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
+
   return data;
 }
 
+/**
+ * Actualiza un producto.
+ */
 export async function updateProduct(
   id: string,
   input: Partial<ProductInput>
 ): Promise<Product> {
   const supabase = createBrowserClient();
+
   const { data, error } = await supabase
     .from("products")
-    .update({ ...input, updated_at: new Date().toISOString() })
+    .update({
+      ...input,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", id)
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
+
   return data;
 }
 
+/**
+ * Activa o desactiva un producto.
+ */
 export async function toggleProductActive(
   id: string,
   active: boolean
 ): Promise<void> {
   const supabase = createBrowserClient();
+
   const { error } = await supabase
     .from("products")
-    .update({ active, updated_at: new Date().toISOString() })
+    .update({
+      active,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", id);
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 }
 
+/**
+ * Elimina un producto.
+ */
 export async function deleteProduct(id: string): Promise<void> {
   const supabase = createBrowserClient();
-  const { error } = await supabase.from("products").delete().eq("id", id);
-  if (error) throw error;
+
+  const { error } = await supabase
+    .from("products")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    throw error;
+  }
 }

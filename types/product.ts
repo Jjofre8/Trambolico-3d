@@ -24,7 +24,6 @@ export interface Product {
   updated_at: string;
 }
 
-/** Payload usado al crear/editar un producto desde el panel admin */
 export interface ProductInput {
   name: string;
   description: string;
@@ -51,19 +50,62 @@ export const EMPTY_PRODUCT_INPUT: ProductInput = {
   active: true,
 };
 
-/** Tipado de la tabla `products` de Supabase, para usar con el cliente tipado */
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       products: {
         Row: Product;
-        Insert: Partial<Product> & {
+
+        Insert: {
+          id?: string;
           name: string;
+          description?: string | null;
           price: number;
+          image_url?: string | null;
           category: string;
+          size?: string | null;
+          production_time?: string | null;
+          colors?: string[] | null;
+          customizable?: boolean;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
         };
-        Update: Partial<Product>;
+
+        Update: {
+          id?: string;
+          name?: string;
+          description?: string | null;
+          price?: number;
+          image_url?: string | null;
+          category?: string;
+          size?: string | null;
+          production_time?: string | null;
+          colors?: string[] | null;
+          customizable?: boolean;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+
+        Relationships: [];
       };
     };
+
+    Views: {
+      [_ in never]: never;
+    };
+
+    Functions: {
+      [_ in never]: never;
+    };
+
+    Enums: {
+      [_ in never]: never;
+    };
+
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
-}
+};
