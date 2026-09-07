@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fdf8ea;
+}
+
+/* Patrón sutil tipo "líneas de impresión 3D" para fondos de sección */
+.print-lines-bg {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(20, 20, 20, 0.035) 0px,
+    rgba(20, 20, 20, 0.035) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+}
+
+.text-outline {
+  -webkit-text-stroke: 1.5px #141414;
+}
+
+/* Scrollbar de categorías más prolija en mobile */
+.scroll-no-bar::-webkit-scrollbar {
+  display: none;
+}
+.scroll-no-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
